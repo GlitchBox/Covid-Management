@@ -1,0 +1,27 @@
+<%- include('includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/relief.css">
+    
+</head>
+
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <main>
+        <form class="relief-form" action="/add-relief" method="POST">
+            <div class="form-control">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name">
+            </div>
+            <div class="form-control">
+                <label for="address">Address</label>
+                <input type="text" name="address" id="ddress">
+            </div>
+            <div class="form-control">
+                <label for="mobile_number">Mobile Number</label>
+                <input type="number" name="mobile_number" id="mobile_number">
+            </div>
+            <button class="btn" type="submit">Add Relief</button>
+            
+        </form>
+    </main>
+<%- include('includes/end.ejs') %>

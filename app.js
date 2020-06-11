@@ -9,6 +9,9 @@ const mongoose = require('mongoose');
 // const csrf = require('csurf');
 const flash = require('connect-flash');
 
+const orgranizationRoutes = require('./routes/organization');
+const defaultController = require('./controllers/defaultPage');
+
 const MONGODB_URI = 'mongodb+srv://root:BLEh-1234@cluster0-5tadv.mongodb.net/covid';
 
 const expressFunction = express();
@@ -36,7 +39,10 @@ expressFunction.use(flash());
 expressFunction.use((request, response, next)=>{
 
     console.log('request came!');
+    next();
 });
+expressFunction.use(orgranizationRoutes);
+expressFunction.use('/', defaultController.notFound);
 
 mongoose.connect(MONGODB_URI)
         .then(result=>{
