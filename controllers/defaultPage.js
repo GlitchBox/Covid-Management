@@ -4,7 +4,7 @@ exports.notFound = (request, response, next)=>{
                             {
                                 pageTitle:"PAGE NOT FOUND", 
                                 path:"N/A",
-                                // isAuthenticated: request.session.isLoggedIn
+                                isAuthenticated: true
                             }
     )
 }
