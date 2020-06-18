@@ -1,6 +1,7 @@
 const rootDir = require('../utils/path');
 const ReliefRequest = require('../models/ReliefRequests');
 const path = require('path');
+const { request } = require('express');
 
 const ITEM_PER_PAGE = 2;
 
@@ -73,4 +74,14 @@ exports.getReliefRequests = (request, response, next)=>{
 
 exports.postDeleteRequest = (request, response, next)=>{
 
+}
+
+exports.getTeams= (request, response, next)=>{
+
+    response.render(path.join('admin', 'teams'), {
+
+        pageTitle: 'Teams',
+        path: '/admin/teams',
+        isAuthenticated: true
+    });
 }
