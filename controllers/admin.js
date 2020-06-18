@@ -87,6 +87,10 @@ exports.getTeams = (request, response, next)=>{
     let filter = {};
     if(request.query.division)
         filter = {...filter, division: request.query.division};
+    // if(request.query.zilla)
+    //     filter = {...filter, zilla: request.query.zilla};
+    // if(request.query.division)
+    //     filter = {...filter, upazilla: request.query.upazilla};
 
     //team regarding of organization
     Team.find(filter)
