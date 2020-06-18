@@ -1,5 +1,5 @@
 <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="/css/product.css">
+    <link rel="stylesheet" href="/css/relief.css">
 </head>
 
 <body>
@@ -22,7 +22,7 @@
                             <p class="relief__description"><%= team.leaderName %></p>
                         </div>
                         <div class="card__actions"> 
-                            <a href="/products/<%= product._id %>" class="btn">Details</a>
+                            <a href="/admin/teams/<%= team._id %>" class="btn">Details</a>
                         </div>
                     </article>
                 <% } %>
@@ -32,6 +32,9 @@
         <% } else{ %>
             <h1>Nothing Assigned Yet!</h1>
         <% } %>
+        <a href="/admin/add-team" class="float">
+            <i class="fa fa-plus my-float"></i>
+        </a>
     </main>
 
 <%- include('../includes/end.ejs') %>

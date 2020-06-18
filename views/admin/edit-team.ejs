@@ -1,0 +1,42 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/relief.css">
+</head>
+
+<body>
+   <%- include('../includes/navigation.ejs') %>
+
+    <main>
+        <form class="relief-form" action="/admin/<% if(editing==='true'){%>edit-team<%} else{%>add-team<% } %>" method="POST">
+            <div class="form-control">
+                <label for="teamName">Team Name</label>
+                <input type="text" name="teamName" id="teamName" value="<% if(editing==='true'){%><%=team.teamName%><%}%>">
+            </div>
+            <div class="form-control">
+                <label for="logoUrl">Team Logo</label>
+                <input type="text" name="logoUrl" id="logoUrl" value="<% if(editing==='true'){%><%=team.logoUrl%><%}%>">
+            </div>
+            <div class="form-control">
+                <label for="leaderName">Leader Name</label>
+                <input type="text" name="leaderName" id="leaderName" value="<% if(editing==='true'){%><%=team.leaderName%><%}%>">
+            </div>
+            <div class="form-control">
+                <label for="division">Division</label>
+                <input type="text" name="division" id="division" value="<% if(editing==='true'){%><%=team.division%><%}%>">
+            </div>
+            <div class="form-control">
+                <label for="zilla">Zilla</label>
+                <input type="text" name="zilla" id="zilla" value="<% if(editing==='true'){%><%=team.zilla%><%}%>">
+            </div>
+            <div class="form-control">
+                <label for="upazilla">Upazilla</label>
+                <input type="text" name="upazilla" id="upazilla" value="<% if(editing==='true'){%><%=team.upazilla%><%}%>">
+            </div>
+            <% if(editing==='true'){ %>
+                <input type="hidden" name="id" value="<%= team._id %>">
+            <% }%>
+            <button class="btn" type="submit"><% if(editing==="true"){ %>Update Team <% }else{ %>Add Team <% } %> 
+            </button>
+        </form>
+    </main>
+<%- include('../includes/end.ejs') %>

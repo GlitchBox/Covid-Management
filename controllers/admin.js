@@ -1,7 +1,6 @@
 const rootDir = require('../utils/path');
 const ReliefRequest = require('../models/ReliefRequests');
 const path = require('path');
-const { request } = require('express');
 
 const ITEM_PER_PAGE = 2;
 
@@ -78,10 +77,45 @@ exports.postDeleteRequest = (request, response, next)=>{
 
 exports.getTeams= (request, response, next)=>{
 
+    let pageNo = 1;
+    if(request.query.page)
+        pageNo = parseInt(pageNo);
+    
+    let totalTeams;
+    teams = [];
     response.render(path.join('admin', 'teams'), {
 
         pageTitle: 'Teams',
         path: '/admin/teams',
+        teams: teams,
+        currentPage: pageNo,
+        hasNextPage: pageNo*ITEM_PER_PAGE < totalTeams,
+        hasPrevPage: pageNo>1,
+        nextPage: pageNo+1,
+        prevPage: pageNo-1,
+        lastPage: Math.ceil(totalTeams/ITEM_PER_PAGE),
         isAuthenticated: true
     });
+}
+
+exports.getAddTeam = (request, response, next)=>{
+
+    let editing = 'false';
+    if(request.query.edit)
+        editing = request.query.edit;
+    response.render(path.join('admin', 'edit-team'), {
+
+        pageTitle: 'Add Team',
+        path: '/admin/add-team',
+        editing: editing,
+        isAuthenticated: true
+    });
+};
+
+exports.postAddTeam = (request, response, next)=>{
+
+};
+
+exports.getTeamDetails = (request, response, next)=>{
+    
 }
