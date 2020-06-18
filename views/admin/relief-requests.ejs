@@ -1,0 +1,38 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/cart.css">
+    <!-- <link rel="stylesheet" href="/css/product.css"> -->
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+        <main>
+            <div class="centered">
+                <form action="/create-order" method="POST">
+                    <input type="number" name="howMany" id="howMany">
+                    <button class="btn" type="submit"><Span>Assign</Span></button>
+                </form>
+            </div>
+            <hr>
+            <% if(requests.length>0){ %>
+                <ul>
+                    <% for(req of requests){ %>
+                        <li class="cart__item">
+                            <ul>
+                                <li><b>Name:</b> <%=req.name%></li>
+                                <li><b>Adress:</b><Address><%=req.address%></Address></li>
+                                <li><b>Mobile Number:</b> <%=req.mobileNumber%></li>
+                                <form action="/admin/delete-request" method="post">
+                                    <button class="btn" type="submit">Transfer</button>
+                                </form>
+                            </ul>                            
+                        </li>
+                    <% }%>
+                </ul>
+                <%- include('../includes/pagination.ejs') %>
+
+            <% } else{ %>
+                <h1>No Requests!</h1>
+            <% } %>
+        </main>
+
+<%- include('../includes/end.ejs') %>

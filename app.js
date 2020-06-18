@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 // const csrf = require('csurf');
 const flash = require('connect-flash');
 
-const orgranizationRoutes = require('./routes/organization');
+const adminRoutes = require('./routes/admin');
 const defaultController = require('./controllers/defaultPage');
 
 const MONGODB_URI = 'mongodb+srv://root:BLEh-1234@cluster0-5tadv.mongodb.net/covid';
@@ -36,12 +36,12 @@ expressFunction.use(express.static(path.join(__dirname, 'public')));
 // }));
 // expressFunction.use(csrfFunction);
 expressFunction.use(flash());
-expressFunction.use((request, response, next)=>{
+// expressFunction.use((request, response, next)=>{
 
-    console.log('request came!');
-    next();
-});
-expressFunction.use(orgranizationRoutes);
+//     console.log('request came!');
+//     next();
+// });
+expressFunction.use('/admin',adminRoutes);
 expressFunction.use('/', defaultController.notFound);
 
 mongoose.connect(MONGODB_URI)
