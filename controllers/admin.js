@@ -84,13 +84,17 @@ exports.getTeams = (request, response, next)=>{
         pageNo = parseInt(request.query.page);
     
     let totalTeams;
+    let filter = {};
+    if(request.query.division)
+        filter = {...filter, division: request.query.division};
+
     //team regarding of organization
-    Team.find()
+    Team.find(filter)
         .countDocuments()
         .then(teamNo=>{
 
             totalTeams = teamNo;
-            return Team.find()
+            return Team.find(filter)
                         .skip((pageNo-1)*ITEM_PER_PAGE)
                         .limit(ITEM_PER_PAGE);
         })

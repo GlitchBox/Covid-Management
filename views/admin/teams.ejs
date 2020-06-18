@@ -7,6 +7,12 @@
     
     <main>
         <% if (teams.length>0){ %>
+            <div class="dropdown">
+                <button class="dropbtn">Division</button>
+                <div class="dropdown-content">
+                  <a href="?division=Dhaka">Dhaka</a>
+                </div>
+              </div>
             <div class="grid">
                 <% for(let team of teams){ %>
                     <article class="card product-item">
