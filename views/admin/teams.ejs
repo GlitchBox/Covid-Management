@@ -11,10 +11,10 @@
                 <% for(let team of teams){ %>
                     <article class="card product-item">
                         <header class="card__header">
-                            <h1 class="relief__title"><%= team.title %></h1>
+                            <h1 class="relief__title"><%= team.teamName %></h1>
                         </header>
                         <div class="card__image">
-                            <img src="<%= product.imageUrl %>" alt="<%= team.title %>">
+                            <img src="<%= team.logoUrl %>" alt="<%= team.teamName %>">
                         </div>
                         <div class="card__content">
                             <h2 class="relief__price">Processing: <%= team.completed %> / <%= team.processing %></h2>

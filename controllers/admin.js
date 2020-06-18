@@ -1,5 +1,6 @@
 const rootDir = require('../utils/path');
 const ReliefRequest = require('../models/ReliefRequests');
+const Team = require('../models/Team');
 const path = require('path');
 
 const ITEM_PER_PAGE = 2;
@@ -40,6 +41,7 @@ exports.postAddRelief = (request, response, next)=>{
 exports.getReliefRequests = (request, response, next)=>{
 
     let pageNo = 1;
+    console.log(request.query.page);
     if(request.query.page)
         pageNo = parseInt(request.query.page);
 
@@ -75,27 +77,43 @@ exports.postDeleteRequest = (request, response, next)=>{
 
 }
 
-exports.getTeams= (request, response, next)=>{
+exports.getTeams = (request, response, next)=>{
 
     let pageNo = 1;
     if(request.query.page)
-        pageNo = parseInt(pageNo);
+        pageNo = parseInt(request.query.page);
     
     let totalTeams;
-    teams = [];
-    response.render(path.join('admin', 'teams'), {
+    //team regarding of organization
+    Team.find()
+        .countDocuments()
+        .then(teamNo=>{
 
-        pageTitle: 'Teams',
-        path: '/admin/teams',
-        teams: teams,
-        currentPage: pageNo,
-        hasNextPage: pageNo*ITEM_PER_PAGE < totalTeams,
-        hasPrevPage: pageNo>1,
-        nextPage: pageNo+1,
-        prevPage: pageNo-1,
-        lastPage: Math.ceil(totalTeams/ITEM_PER_PAGE),
-        isAuthenticated: true
-    });
+            totalTeams = teamNo;
+            return Team.find()
+                        .skip((pageNo-1)*ITEM_PER_PAGE)
+                        .limit(ITEM_PER_PAGE);
+        })
+        .then(teams=>{
+
+            response.render(path.join('admin', 'teams'), {
+
+                pageTitle: 'Teams',
+                path: '/admin/teams',
+                teams: teams,
+                currentPage: pageNo,
+                hasNextPage: pageNo*ITEM_PER_PAGE < totalTeams,
+                hasPrevPage: pageNo>1,
+                nextPage: pageNo+1,
+                prevPage: pageNo-1,
+                lastPage: Math.ceil(totalTeams/ITEM_PER_PAGE),
+                isAuthenticated: true
+            });
+        })
+        .catch(err=>{
+            console.log(err);
+        });
+
 }
 
 exports.getAddTeam = (request, response, next)=>{
@@ -114,8 +132,36 @@ exports.getAddTeam = (request, response, next)=>{
 
 exports.postAddTeam = (request, response, next)=>{
 
+    const teamName = request.body.teamName;
+    const logoUrl = request.body.logoUrl;
+    const leaderName = request.body.leaderName;
+    const division = request.body.division.toUpperCase();
+    const zilla = request.body.zilla.toUpperCase();
+    const upazilla = request.body.upazilla.toUpperCase();
+
+    const newTeam = new Team({
+
+        teamName: teamName,
+        logoUrl: logoUrl,
+        leaderName: leaderName,
+        division: division,
+        zilla: zilla,
+        upazilla: upazilla,
+        completed: 0,
+        processing: 0,
+        totalServed: 0
+    });
+    return newTeam.save()
+            .then(result=>{
+                console.log('Team added');
+                response.redirect('/admin/teams');
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+
 };
 
 exports.getTeamDetails = (request, response, next)=>{
-    
+
 }
