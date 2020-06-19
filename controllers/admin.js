@@ -85,12 +85,12 @@ exports.getTeams = (request, response, next)=>{
     
     let totalTeams;
     let filter = {};
-    if(request.query.division)
+    if(request.query.division && request.query.division!=='none')
         filter = {...filter, division: request.query.division};
-    // if(request.query.zilla)
-    //     filter = {...filter, zilla: request.query.zilla};
-    // if(request.query.division)
-    //     filter = {...filter, upazilla: request.query.upazilla};
+    if(request.query.zilla && request.query.zilla!=='none')
+        filter = {...filter, zilla: request.query.zilla};
+    if(request.query.division && request.query.upazilla!=='none')
+        filter = {...filter, upazilla: request.query.upazilla};
 
     //team regarding of organization
     Team.find(filter)

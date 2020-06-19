@@ -7,27 +7,23 @@
     
     <main>
         <% if (teams.length>0){ %>
-            <div class="dropdown">
-                <button class="dropbtn">Division</button>
-                <div class="dropdown-content">
-                  <a href="?">Select Division</a>
-                  <a href="?division=DHAKA">Dhaka</a>
-                </div>
-              </div>
-            <div class="dropdown">
-                <button class="dropbtn">Zilla</button>
-                <div class="dropdown-content">
-                  <a href="?">Select Zilla</a>
-                  <a href="?division=DHAKA">Dhaka</a>
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="dropbtn">Upazilla</button>
-                <div class="dropdown-content">
-                  <a href="?">Select Upazilla</a>
-                  <a href="?division=DHAKA SADAR">Dhaka Sadar</a>
-                </div>
-            </div>
+
+            <form class="relief-form centered">   
+                <select class="pagination custom-select" name="division">
+                    <option class = "select-selected" value="none">Select Division</option>
+                    <option class = "select-selected" value="DHAKA">Dhaka</option>
+                </select>
+                <select class="pagination custom-select" name="zilla">
+                    <option class = "select-selected" value="none">Select Zilla</option>
+                    <option class = "select-selected" value="DHAKA">Dhaka</option>
+                </select>
+                <select class="pagination custom-select" name="upazilla">
+                    <option class = "select-selected" value="none">Select Upazilla</option>
+                    <option class = "select-selected" value="DHAKA">Dhaka Sadar</option>
+                </select>
+                <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
+            </form>  
+
             <div class="grid">
                 <% for(let team of teams){ %>
                     <article class="card product-item">
