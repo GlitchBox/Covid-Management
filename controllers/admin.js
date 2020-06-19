@@ -41,6 +41,12 @@ exports.postAddRelief = (request, response, next)=>{
 
 exports.getReliefRequests = (request, response, next)=>{
 
+    // const errorMessage = request.flash('error');
+    // if(errorMessage && errorMessage.length>0)
+    //     errorMessage = errorMessage[0];
+    // else
+    //     errorMessage = null;
+
     let pageNo = 1;
     if(request.query.page)
         pageNo = parseInt(request.query.page);
@@ -62,6 +68,7 @@ exports.getReliefRequests = (request, response, next)=>{
                         pageTitle: 'Unassigned Requests',
                         path: '/admin/relief-requests',
                         requests: requests,
+                        // errorMessage: errorMessage,
                         currentPage: pageNo,
                         hasNextPage: pageNo*ITEM_PER_PAGE < totalRequests,
                         hasPrevPage: pageNo>1,
@@ -76,9 +83,11 @@ exports.getReliefRequests = (request, response, next)=>{
 exports.postAssignRequest = (request, response, next)=>{
 
     let requestNo = 0;
-    if(!request.body.requestNo){
-        
-    }
+    // if(!request.body.requestNo){
+
+    //     request.flash('error', 'Number of Requests has not been set');
+    //     return response.redirect('/admin/relief-requests');
+    // }
         
     console.log(requestNo);
     const teamName = request.body.teamName;
