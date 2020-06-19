@@ -2,6 +2,7 @@ const rootDir = require('../utils/path');
 const ReliefRequest = require('../models/ReliefRequests');
 const Team = require('../models/Team');
 const path = require('path');
+const helperFunctions = require('../utils/helper');
 
 const ITEM_PER_PAGE = 2;
 
@@ -71,6 +72,34 @@ exports.getReliefRequests = (request, response, next)=>{
                         isAuthenticated: true
                     });
                 })
+};
+
+exports.postAssignRequest = (request, response, next)=>{
+
+    const requestNo = parseInt(request.body.requestNo);
+    const teamName = request.body.teamName;
+    console.log(teamName);
+    let teamId;
+    //find teamid by using name
+    Team.find({teamName: teamName})
+        .then(teams=>{
+            //first find requestNo number of requests
+            teamId = teams[0]._id;
+            return ReliefRequest.find({teamId: {$exists: false}})
+                                .limit(requestNo);
+        })
+        .then(requests=>{
+            helperFunctions.assignTeam(requests, teamId, ()=>{
+
+                response.redirect('/admin/relief-requests');
+            });
+        })
+        .catch(err=>{
+            console.log(err);
+        });
+
+
+                    
 };
 
 exports.postDeleteRequest = (request, response, next)=>{

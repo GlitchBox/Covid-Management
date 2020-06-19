@@ -7,23 +7,25 @@
     
     <main>
         <% if (teams.length>0){ %>
-
-            <form class="relief-form centered">   
-                <select class="pagination custom-select" name="division">
-                    <option class = "select-selected" value="none">Select Division</option>
-                    <option class = "select-selected" value="DHAKA">Dhaka</option>
-                </select>
-                <select class="pagination custom-select" name="zilla">
-                    <option class = "select-selected" value="none">Select Zilla</option>
-                    <option class = "select-selected" value="DHAKA">Dhaka</option>
-                </select>
-                <select class="pagination custom-select" name="upazilla">
-                    <option class = "select-selected" value="none">Select Upazilla</option>
-                    <option class = "select-selected" value="DHAKA">Dhaka Sadar</option>
-                </select>
-                <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
-            </form>  
-
+            <div class="centered">
+                <form class="relief-form">
+                    <select class="pagination custom-select" name="division">
+                        <option class = "select-selected" value="none">Select Division</option>
+                        <option class = "select-selected" value="DHAKA">Dhaka</option>
+                    </select>
+                    <select class="pagination custom-select" name="zilla">
+                        <option class = "select-selected" value="none">Select Zilla</option>
+                        <option class = "select-selected" value="DHAKA">Dhaka</option>
+                    </select>
+                    <select class="pagination custom-select" name="upazilla">
+                        <option class = "select-selected" value="none">Select Upazilla</option>
+                        <option class = "select-selected" value="DHAKA">Dhaka Sadar</option>
+                    </select>
+                    <div>
+                        <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>  
+            </div>
             <div class="grid">
                 <% for(let team of teams){ %>
                     <article class="card product-item">

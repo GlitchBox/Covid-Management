@@ -7,8 +7,19 @@
         <%- include('../includes/navigation.ejs') %>
         <main>
             <div class="centered">
-                <form action="/create-order" method="POST">
-                    <input type="number" name="howMany" id="howMany">
+                <form class="relief-form" method="POST">
+                    <div class="form-control">
+                        <label for="requestNo">Number of Requests</label>
+                        <input type="number" name="requestNo" id="requestNo">
+                    </div>
+                    <div class="form-control">
+                        <label for="teamName">Team Name</label>
+                        <select class="pagination custom-select" name="teamName">
+                            <option class = "select-selected" value="Team 1">Team 1</option>
+                            <option class = "select-selected" value="Team 2">Team 2</option>
+                            <option class = "select-selected" value="Team 3">Team 3</option>
+                        </select>
+                    </div>
                     <button class="btn" type="submit"><Span>Assign</Span></button>
                 </form>
             </div>
