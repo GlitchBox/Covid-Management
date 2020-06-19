@@ -6,25 +6,25 @@
     <body>
         <%- include('../includes/navigation.ejs') %>
         <main>
-            <div class="centered">
-                <form class="relief-form" method="POST">
-                    <div class="form-control">
-                        <label for="requestNo">Number of Requests</label>
-                        <input type="number" name="requestNo" id="requestNo">
-                    </div>
-                    <div class="form-control">
-                        <label for="teamName">Team Name</label>
-                        <select class="pagination custom-select" name="teamName">
-                            <option class = "select-selected" value="Team 1">Team 1</option>
-                            <option class = "select-selected" value="Team 2">Team 2</option>
-                            <option class = "select-selected" value="Team 3">Team 3</option>
-                        </select>
-                    </div>
-                    <button class="btn" type="submit"><Span>Assign</Span></button>
-                </form>
-            </div>
-            <hr>
             <% if(requests.length>0){ %>
+                <div class="centered">
+                    <form class="relief-form" method="POST">
+                        <div class="form-control">
+                            <label for="requestNo">Number of Requests</label>
+                            <input type="number" name="requestNo" id="requestNo">
+                        </div>
+                        <div class="form-control">
+                            <label for="teamName">Team Name</label>
+                            <select class="pagination custom-select" name="teamName">
+                                <option class = "select-selected" value="Team 1">Team 1</option>
+                                <option class = "select-selected" value="Team 2">Team 2</option>
+                                <option class = "select-selected" value="Team 3">Team 3</option>
+                            </select>
+                        </div>
+                        <button class="btn" type="submit"><Span>Assign</Span></button>
+                    </form>
+                </div>
+                <hr>
                 <ul>
                     <% for(req of requests){ %>
                         <li class="cart__item">

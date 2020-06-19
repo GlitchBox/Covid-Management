@@ -42,17 +42,16 @@ exports.postAddRelief = (request, response, next)=>{
 exports.getReliefRequests = (request, response, next)=>{
 
     let pageNo = 1;
-    console.log(request.query.page);
     if(request.query.page)
         pageNo = parseInt(request.query.page);
 
     let totalRequests;
-    ReliefRequest.find()
+    ReliefRequest.find({teamId: {$exists: false}})
                 .countDocuments()
                 .then(requestCount=>{
 
                     totalRequests = requestCount;
-                    return ReliefRequest.find()
+                    return ReliefRequest.find({teamId: {$exists: false}})
                                         .skip((pageNo-1)*ITEM_PER_PAGE)
                                         .limit(ITEM_PER_PAGE);
                 })
@@ -76,10 +75,15 @@ exports.getReliefRequests = (request, response, next)=>{
 
 exports.postAssignRequest = (request, response, next)=>{
 
-    const requestNo = parseInt(request.body.requestNo);
+    let requestNo = 0;
+    if(!request.body.requestNo){
+        
+    }
+        
+    console.log(requestNo);
     const teamName = request.body.teamName;
-    console.log(teamName);
     let teamId;
+    
     //find teamid by using name
     Team.find({teamName: teamName})
         .then(teams=>{
