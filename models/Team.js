@@ -6,7 +6,8 @@ const Team = new Schema({
 
     orgId: {
         type: Schema.Types.ObjectId,
-        // required: true
+        refer: 'orgs',
+        required: true
     },
 
     teamName: {

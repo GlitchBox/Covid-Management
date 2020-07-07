@@ -11,6 +11,7 @@ const flash = require('connect-flash');
 
 const adminRoutes = require('./routes/admin');
 const defaultController = require('./controllers/defaultPage');
+const Orgs = require('./models/organization');
 
 const MONGODB_URI = 'mongodb+srv://root:BLEh-1234@cluster0-5tadv.mongodb.net/covid';
 
@@ -41,14 +42,57 @@ expressFunction.use(flash());
 //     console.log('request came!');
 //     next();
 // });
+// expressFunction.use((request, respose, next)=>{
+
+//     Orgs.findById()
+// });
+expressFunction.use((request, respnse, next)=>{
+
+    Orgs.findById('5f049bf926b29253429dc5bf')
+        .then(org=>{
+
+            request.org = org;
+            console.log(request.org);
+            next();
+        })
+        .catch(err=>{
+            console.log(err);
+        });
+})
+
+//routes
 expressFunction.use('/admin',adminRoutes);
 expressFunction.use('/', defaultController.notFound);
 
 mongoose.connect(MONGODB_URI)
         .then(result=>{
-            const server = http.createServer(expressFunction);
-            server.listen(port=6789, hostname='localhost');
+            
+            return Orgs.findOne()
+                .then(org=>{
+
+                    if(!org){
+                        const newUser = new Orgs({
+
+                            name: 'Biddyanondo',
+                            teams: [],
+                            division: [],
+                            zilla: [],
+                            upazilla: [],
+                            capacity: 100,
+                            processing: 0,
+                            completed: 0
+                        });
+
+                        newUser.save()
+                                .then(result=>{
+                                    console.log('Org has been created!');
+                                });
+                    }
+                    const server = http.createServer(expressFunction);
+                    server.listen(port=6789, hostname='localhost');
+                })
+
         })
         .catch(err=>{
             console.log(err);
-        })
+        });
