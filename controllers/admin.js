@@ -191,6 +191,7 @@ exports.postAddTeam = (request, response, next)=>{
 
     const newTeam = new Team({
 
+        orgId: request.org._id,
         teamName: teamName,
         logoUrl: logoUrl,
         leaderName: leaderName,
@@ -203,8 +204,15 @@ exports.postAddTeam = (request, response, next)=>{
     });
     return newTeam.save()
             .then(result=>{
+                
                 console.log('Team added');
-                response.redirect('/admin/teams');
+                let thisOrg = request.org;
+                thisOrg.teams.push(result._id);
+                //push upazilla, division, zilla to org's respective field, if they don't exist already
+                thisOrg.save()
+                        .then(result2=>{
+                            response.redirect('/admin/teams');
+                        })
             })
             .catch(err=>{
                 console.log(err);
