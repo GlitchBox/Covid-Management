@@ -48,7 +48,8 @@ expressFunction.use(flash());
 // });
 expressFunction.use((request, respnse, next)=>{
 
-    Orgs.findById('5f049bf926b29253429dc5bf')
+    Orgs.findById('5f05d08ebfd52f425b764eae')
+        // .select('_id name teams')
         .then(org=>{
 
             request.org = org;

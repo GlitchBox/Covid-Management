@@ -9,10 +9,56 @@ const Orgs = Schema({
     },
 
     teams: [
+        // {
+        //     type: Schema.Types.ObjectId,
+        //     refer: 'teams',
+        //     required: true
+        // }
         {
-            type: Schema.Types.ObjectId,
-            refer: 'teams',
-            required: true
+            teamId: {
+                type: Number,
+                required: true,
+            },
+        
+            leaderName: {
+                type: String,
+                required: true
+            },
+        
+            logoUrl: {
+                type: String,
+            },
+        
+            division: {
+                type: String,
+                required: true
+            },
+        
+            zilla: {
+                type: String,
+                required: true
+            },
+        
+            upazilla: {
+                type: String,
+                required: true
+            },
+        
+            completed: {
+                type: Number,
+                required: true
+            },
+        
+            processing: {
+                type: Number,
+                required: true
+            },
+        
+            totalServed: {
+                type: Number,
+                required: true
+            }
+        
         }
     ],
 

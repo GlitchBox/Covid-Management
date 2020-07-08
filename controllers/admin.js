@@ -3,6 +3,7 @@ const ReliefRequest = require('../models/ReliefRequests');
 const Team = require('../models/Team');
 const path = require('path');
 const helperFunctions = require('../utils/helper');
+const Orgs = require('../models/organization');
 
 const ITEM_PER_PAGE = 2;
 
@@ -52,6 +53,7 @@ exports.getReliefRequests = (request, response, next)=>{
         pageNo = parseInt(request.query.page);
 
     let totalRequests;
+    let requestList;
     ReliefRequest.find({teamId: {$exists: false}})
                 .countDocuments()
                 .then(requestCount=>{
@@ -63,11 +65,20 @@ exports.getReliefRequests = (request, response, next)=>{
                 })
                 .then(requests=>{
 
+                    requestList = requests;
+                    return Orgs.find({_id: request.org._id})
+                        .populate('teams')
+                        .select('teams.name');
+                    
+                })
+                .then(teams=>{
+                    console.log(teams);
                     response.render(path.join('admin','relief-requests'),{
 
                         pageTitle: 'Unassigned Requests',
                         path: '/admin/relief-requests',
-                        requests: requests,
+                        requests: requestList,
+                        teams: teams,
                         // errorMessage: errorMessage,
                         currentPage: pageNo,
                         hasNextPage: pageNo*ITEM_PER_PAGE < totalRequests,
@@ -78,6 +89,9 @@ exports.getReliefRequests = (request, response, next)=>{
                         isAuthenticated: true
                     });
                 })
+                .catch(err=>{
+                    console.log(err);
+                });
 };
 
 exports.postAssignRequest = (request, response, next)=>{
@@ -125,7 +139,6 @@ exports.getTeams = (request, response, next)=>{
     if(request.query.page)
         pageNo = parseInt(request.query.page);
     
-    let totalTeams;
     let filter = {};
     if(request.query.division && request.query.division!=='none')
         filter = {...filter, division: request.query.division};
@@ -134,35 +147,33 @@ exports.getTeams = (request, response, next)=>{
     if(request.query.division && request.query.upazilla!=='none')
         filter = {...filter, upazilla: request.query.upazilla};
 
-    //team regarding of organization
-    Team.find(filter)
-        .countDocuments()
-        .then(teamNo=>{
+    const startIndex = (pageNo-1)*ITEM_PER_PAGE;
+    const teams = request.org.teams.filter(team=>{
 
-            totalTeams = teamNo;
-            return Team.find(filter)
-                        .skip((pageNo-1)*ITEM_PER_PAGE)
-                        .limit(ITEM_PER_PAGE);
-        })
-        .then(teams=>{
+        let f = {};
+        if(filter.division)
+            f = {...f, division: team.division}
+        if(filter.zilla)
+            f = {...f, zilla: team.zilla};
+        if(filter.upazilla)
+            f = {...f, upazilla: team.upazilla};
 
-            response.render(path.join('admin', 'teams'), {
+        return JSON.stringify(f) === JSON.stringify(filter);
+    });
+    // console.log(teams);
+    response.render(path.join('admin', 'teams'), {
 
-                pageTitle: 'Teams',
-                path: '/admin/teams',
-                teams: teams,
-                currentPage: pageNo,
-                hasNextPage: pageNo*ITEM_PER_PAGE < totalTeams,
-                hasPrevPage: pageNo>1,
-                nextPage: pageNo+1,
-                prevPage: pageNo-1,
-                lastPage: Math.ceil(totalTeams/ITEM_PER_PAGE),
-                isAuthenticated: true
-            });
-        })
-        .catch(err=>{
-            console.log(err);
-        });
+        pageTitle: 'Teams',
+        path: '/admin/teams',
+        teams: teams.slice(startIndex, startIndex+ITEM_PER_PAGE),
+        currentPage: pageNo,
+        hasNextPage: pageNo*ITEM_PER_PAGE < teams.length,
+        hasPrevPage: pageNo>1,
+        nextPage: pageNo+1,
+        prevPage: pageNo-1,
+        lastPage: Math.ceil(teams.length/ITEM_PER_PAGE),
+        isAuthenticated: true
+    });
 
 }
 
@@ -182,41 +193,47 @@ exports.getAddTeam = (request, response, next)=>{
 
 exports.postAddTeam = (request, response, next)=>{
 
-    const teamName = request.body.teamName;
+    let teamId = 1;
     const logoUrl = request.body.logoUrl;
     const leaderName = request.body.leaderName;
     const division = request.body.division.toUpperCase();
     const zilla = request.body.zilla.toUpperCase();
     const upazilla = request.body.upazilla.toUpperCase();
 
-    const newTeam = new Team({
+    return Orgs.findById(request.org._id)
+        .select('teams zilla upazilla division')
+        .then(org=>{
 
-        orgId: request.org._id,
-        teamName: teamName,
-        logoUrl: logoUrl,
-        leaderName: leaderName,
-        division: division,
-        zilla: zilla,
-        upazilla: upazilla,
-        completed: 0,
-        processing: 0,
-        totalServed: 0
-    });
-    return newTeam.save()
-            .then(result=>{
-                
-                console.log('Team added');
-                let thisOrg = request.org;
-                thisOrg.teams.push(result._id);
-                //push upazilla, division, zilla to org's respective field, if they don't exist already
-                thisOrg.save()
-                        .then(result2=>{
-                            response.redirect('/admin/teams');
-                        })
-            })
-            .catch(err=>{
-                console.log(err);
-            });
+            if(org.teams.length>0)
+                teamId = org.teams[org.teams.length-1].teamId+1;
+
+            const newTeam = {
+
+                teamId: teamId,
+                logoUrl: logoUrl,
+                leaderName: leaderName,
+                division: division,
+                zilla: zilla,
+                upazilla: upazilla,
+                completed: 0,
+                processing: 0,
+                totalServed: 0
+            };
+            org.teams.push(newTeam);
+            if(org.division.indexOf(division)===-1)
+                org.division.push(division);
+            if(org.zilla.indexOf(zilla)===-1)
+                org.zilla.push(zilla);
+            if(org.upazilla.indexOf(upazilla)===-1)
+                org.upazilla.push(upazilla);
+
+            org.save()
+                .then(result=>{
+
+                    console.log('Team has been added!');
+                    response.redirect('/admin/');
+                });
+        })
 
 };
 
