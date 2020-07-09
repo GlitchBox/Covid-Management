@@ -10,7 +10,7 @@ const ReliefRequest = new Schema({
     },
 
     teamId: {
-        type: Schema.Types.ObjectId,
+        type: Number,
         // required: true
     },
 

@@ -93,36 +93,64 @@ exports.getReliefRequests = (request, response, next)=>{
 
 exports.postAssignRequest = (request, response, next)=>{
 
-    let requestNo = 0;
+    let requestNo;
     // if(!request.body.requestNo){
 
     //     request.flash('error', 'Number of Requests has not been set');
     //     return response.redirect('/admin/relief-requests');
     // }
-        
-    console.log(requestNo);
-    const teamName = request.body.teamName;
-    let teamId;
-    
-    //find teamid by using name
-    Team.find({teamName: teamName})
-        .then(teams=>{
-            //first find requestNo number of requests
-            teamId = teams[0]._id;
-            return ReliefRequest.find({teamId: {$exists: false}})
-                                .limit(requestNo);
-        })
-        .then(requests=>{
-            helperFunctions.assignTeam(requests, teamId, ()=>{
+    requestNo = parseInt(request.body.requestNo);
+    // console.log(requestNo);
+    if(requestNo===0)
+        return response.redirect('/admin/relief-requests');
 
-                response.redirect('/admin/relief-requests');
-            });
-        })
-        .catch(err=>{
-            console.log(err);
-        });
+    const teamId = request.body.teamId;
+    let selectedTeam;
+    for(team of request.org.teams){
+
+        if(team.teamId.toString()==teamId.toString()){
+            selectedTeam = team;
+            break;
+        }
+    }
+    // console.log(team);
+    const teamDiv = team.division;
+    const teamZilla = team.zilla;
+    const teamUpazilla = team.upazilla;
+    let assignNum; 
+    ReliefRequest.find({
+                        teamId: {$exists: false},
+                        division: teamDiv, 
+                        zilla:teamZilla, 
+                        upazilla: teamUpazilla
+                    })
+                .countDocuments()
+                .then(numberOfReqs=>{
+
+                    assignNum = Math.min(numberOfReqs, requestNo);
+                    console.log(assignNum);
+                    return ReliefRequest.find({
+                                                teamId: {$exists: false},
+                                                division: teamDiv, 
+                                                zilla:teamZilla, 
+                                                upazilla: teamUpazilla})
+                                        .limit(assignNum);
+                })
+                .then(topRequests=>{
 
 
+                    helperFunctions.assignTeam(topRequests, teamId, assignNum, ()=>{
+                        request.org.processing = request.org.processing + assignNum;
+                        return request.org.save();
+                    });
+                })
+                .then(result=>{
+
+                    response.redirect('/admin/relief-requests');
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
                     
 };
 
@@ -228,7 +256,7 @@ exports.postAddTeam = (request, response, next)=>{
                 .then(result=>{
 
                     console.log('Team has been added!');
-                    response.redirect('/admin/');
+                    response.redirect('/admin/teams');
                 });
         })
 

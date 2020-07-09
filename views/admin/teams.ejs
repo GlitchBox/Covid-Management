@@ -31,7 +31,8 @@
                 <% for(let team of teams){ %>
                     <article class="card product-item">
                         <header class="card__header">
-                            <h1 class="relief__title"><%= team.teamName %></h1>
+                            <h1 class="relief__title">Team <%= team.teamId %></h1>
+                            <p class="relief__title"><%= team.division %>, <%= team.zilla%>, <%=team.upazilla%></p>
                         </header>
                         <div class="card__image">
                             <img src="<%= team.logoUrl %>" alt="<%= team.teamName %>">
