@@ -16,9 +16,9 @@
                         <div class="form-control">
                             <label for="teamName">Team Name</label>
                             <select class="pagination custom-select" name="teamName">
-                                <option class = "select-selected" value="Team 1">Team 1</option>
-                                <option class = "select-selected" value="Team 2">Team 2</option>
-                                <option class = "select-selected" value="Team 3">Team 3</option>
+                                <% for(team of teams){%>
+                                    <option class = "select-selected" value="<%=team.teamId %>">Team <%=team.teamId%></option>
+                                <%}%>
                             </select>
                         </div>
                         <button class="btn" type="submit"><Span>Assign</Span></button>
@@ -30,7 +30,9 @@
                         <li class="cart__item">
                             <ul>
                                 <li><b>Name:</b> <%=req.name%></li>
-                                <li><b>Adress:</b><Address><%=req.address%></Address></li>
+                                <li><b>Division:</b><Address><%=req.division%></Address></li>
+                                <li><b>Zilla:</b><Address><%=req.zilla%></Address></li>
+                                <li><b>Upazilla:</b><Address><%=req.upazilla%></Address></li>
                                 <li><b>Mobile Number:</b> <%=req.mobileNumber%></li>
                                 <form action="/admin/delete-request" method="post">
                                     <button class="btn" type="submit">Transfer</button>

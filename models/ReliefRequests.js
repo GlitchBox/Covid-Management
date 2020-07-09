@@ -5,7 +5,8 @@ const ReliefRequest = new Schema({
 
     orgId: {
         type: Schema.Types.ObjectId,
-        //required: true
+        refer: 'orgs',
+        required: true
     },
 
     teamId: {
@@ -18,7 +19,17 @@ const ReliefRequest = new Schema({
         required: true
     },
 
-    address: {
+    zilla: {
+        type: String,
+        required: true
+    },
+
+    upazilla: {
+        type: String,
+        required: true
+    },
+
+    division: {
         type: String,
         required: true
     },

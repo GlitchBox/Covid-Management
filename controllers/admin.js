@@ -20,14 +20,19 @@ exports.getAddRelief = (request, response, next)=>{
 exports.postAddRelief = (request, response, next)=>{
 
     const name = request.body.name;
-    const address = request.body.address;
+    const division = request.body.division;
+    const zilla = request.body.zilla;
+    const upazilla = request.body.upazilla;
     const mobileNumber = request.body.mobile_number;
     
     // console.log(name, address, mobileNumber);
     const newRequest = new ReliefRequest({
 
+        orgId: request.org._id,
         name: name,
-        address: address,
+        division: division.toUpperCase(),
+        zilla: zilla.toUpperCase(),
+        upazilla: upazilla.toUpperCase(),
         mobileNumber: mobileNumber
     });
     newRequest.save()
@@ -53,7 +58,6 @@ exports.getReliefRequests = (request, response, next)=>{
         pageNo = parseInt(request.query.page);
 
     let totalRequests;
-    let requestList;
     ReliefRequest.find({teamId: {$exists: false}})
                 .countDocuments()
                 .then(requestCount=>{
@@ -65,20 +69,12 @@ exports.getReliefRequests = (request, response, next)=>{
                 })
                 .then(requests=>{
 
-                    requestList = requests;
-                    return Orgs.find({_id: request.org._id})
-                        .populate('teams')
-                        .select('teams.name');
-                    
-                })
-                .then(teams=>{
-                    console.log(teams);
                     response.render(path.join('admin','relief-requests'),{
 
                         pageTitle: 'Unassigned Requests',
                         path: '/admin/relief-requests',
-                        requests: requestList,
-                        teams: teams,
+                        requests: requests,
+                        teams: request.org.teams,
                         // errorMessage: errorMessage,
                         currentPage: pageNo,
                         hasNextPage: pageNo*ITEM_PER_PAGE < totalRequests,
@@ -88,6 +84,7 @@ exports.getReliefRequests = (request, response, next)=>{
                         lastPage: Math.ceil(totalRequests/ITEM_PER_PAGE),
                         isAuthenticated: true
                     });
+                    
                 })
                 .catch(err=>{
                     console.log(err);

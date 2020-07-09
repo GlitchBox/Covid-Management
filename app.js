@@ -53,7 +53,7 @@ expressFunction.use((request, respnse, next)=>{
         .then(org=>{
 
             request.org = org;
-            console.log(request.org);
+            // console.log(request.org);
             next();
         })
         .catch(err=>{
